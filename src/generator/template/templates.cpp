@@ -456,6 +456,72 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                         rules.emplace_back(strLine);
                     }
                 }
+                else if (startsWith(strLine, "PROCESS-NAME,")) {
+                    if (script) {
+                        vArray = split(strLine, ",");
+                        if (vArray.size() < 2)
+                            continue;
+                        if (keywords.find(rule_name) == keywords.end())
+                            keywords[rule_name] = "\"" + vArray[1] + "\"";
+                        else
+                            keywords[rule_name] += ",\"" + vArray[1] + "\"";
+                    } else {
+                        vArray = split(strLine, ",");
+                        if (vArray.size() < 2) {
+                            strLine = vArray[0] + "," + rule_group;
+                        } else {
+                            strLine = vArray[0] + "," + vArray[1] + "," + rule_group;
+                            if (vArray.size() > 2)
+                                strLine += "," + vArray[2];
+                        }
+                        rules.emplace_back(strLine);
+                    }
+                }
+                else if (startsWith(strLine, "AND,")) {
+                    if (script) {
+                        vArray = split(strLine, ",");
+                        if (vArray.size() < 2)
+                            continue;
+                        if (keywords.find(rule_name) == keywords.end())
+                            keywords[rule_name] = "\"" + vArray[1] + "\"";
+                        else
+                            keywords[rule_name] += ",\"" + vArray[1] + "\"";
+                    } else if (strLine.substr(strLine.length() - 2) == "))") {
+                        // Extract the substring starting after "AND," and add rule_group at the end
+                        strLine = strLine.substr(0, strLine.length() - 2) + "))," + rule_group;
+                        rules.emplace_back(strLine);
+                    }
+                }
+                else if (startsWith(strLine, "OR,")) {
+                    if (script) {
+                        vArray = split(strLine, ",");
+                        if (vArray.size() < 2)
+                            continue;
+                        if (keywords.find(rule_name) == keywords.end())
+                            keywords[rule_name] = "\"" + vArray[1] + "\"";
+                        else
+                            keywords[rule_name] += ",\"" + vArray[1] + "\"";
+                    } else if (strLine.substr(strLine.length() - 2) == "))") {
+                        // Extract the substring starting after "AND," and add rule_group at the end
+                        strLine = strLine.substr(0, strLine.length() - 2) + "))," + rule_group;
+                        rules.emplace_back(strLine);
+                    }
+                }
+                else if (startsWith(strLine, "NOT,")) {
+                    if (script) {
+                        vArray = split(strLine, ",");
+                        if (vArray.size() < 2)
+                            continue;
+                        if (keywords.find(rule_name) == keywords.end())
+                            keywords[rule_name] = "\"" + vArray[1] + "\"";
+                        else
+                            keywords[rule_name] += ",\"" + vArray[1] + "\"";
+                    } else if (strLine.substr(strLine.length() - 2) == "))") {
+                        // Extract the substring starting after "AND," and add rule_group at the end
+                        strLine = strLine.substr(0, strLine.length() - 2) + "))," + rule_group;
+                        rules.emplace_back(strLine);
+                    }
+                }
                 else if(!has_domain[rule_name] && (startsWith(strLine, "DOMAIN,") || startsWith(strLine, "DOMAIN-SUFFIX,")))
                     has_domain[rule_name] = true;
                 else if(!has_ipcidr[rule_name] && (startsWith(strLine, "IP-CIDR,") || startsWith(strLine, "IP-CIDR6,")))
