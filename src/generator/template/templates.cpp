@@ -522,28 +522,29 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                         rules.emplace_back(strLine);
                     }
                 }
-                else if (startsWith(strLine, "URL-REGEX,")) {
-                    if (script) {
-                        vArray = split(strLine, ",");
-                        if (vArray.size() < 2)
-                            continue;
-                        if (keywords.find(rule_name) == keywords.end())
-                            keywords[rule_name] = "\"" + vArray[1] + "\"";
-                        else
-                            keywords[rule_name] += ",\"" + vArray[1] + "\"";
-                    } else {
-                        vArray = split(strLine, ",");
-                        if (vArray.size() < 2) {
-                            strLine = vArray[0] + "," + rule_group;
-                        } else {
-                            strLine = vArray[0] + "," + vArray[1] + "," + rule_group;
-                            if (vArray.size() > 2)
-                                strLine += "," + vArray[2];
-                        }
-                        strLine = strLine.replace(0, 9, "DOMAIN-REGEX");
-                        rules.emplace_back(strLine);
-                    }
-                }
+                // clash runs unstable, temporarily disable REGEX.
+                // else if (startsWith(strLine, "URL-REGEX,")) {
+                //     if (script) {
+                //         vArray = split(strLine, ",");
+                //         if (vArray.size() < 2)
+                //             continue;
+                //         if (keywords.find(rule_name) == keywords.end())
+                //             keywords[rule_name] = "\"" + vArray[1] + "\"";
+                //         else
+                //             keywords[rule_name] += ",\"" + vArray[1] + "\"";
+                //     } else {
+                //         vArray = split(strLine, ",");
+                //         if (vArray.size() < 2) {
+                //             strLine = vArray[0] + "," + rule_group;
+                //         } else {
+                //             strLine = vArray[0] + "," + vArray[1] + "," + rule_group;
+                //             if (vArray.size() > 2)
+                //                 strLine += "," + vArray[2];
+                //         }
+                //         strLine = strLine.replace(0, 9, "DOMAIN-REGEX");
+                //         rules.emplace_back(strLine);
+                //     }
+                // }
                 else if(!has_domain[rule_name] && (startsWith(strLine, "DOMAIN,") || startsWith(strLine, "DOMAIN-SUFFIX,")))
                     has_domain[rule_name] = true;
                 else if(!has_ipcidr[rule_name] && (startsWith(strLine, "IP-CIDR,") || startsWith(strLine, "IP-CIDR6,")))
