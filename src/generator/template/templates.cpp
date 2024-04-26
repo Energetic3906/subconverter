@@ -540,7 +540,7 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                             if (vArray.size() > 2)
                                 strLine += "," + vArray[2];
                         }
-                        strLine = strLine.replace("URL-REGEX", "DOMAIN-REGEX");
+                        strLine = strLine.replace(0, 9, "DOMAIN-REGEX");
                         rules.emplace_back(strLine);
                     }
                 }
